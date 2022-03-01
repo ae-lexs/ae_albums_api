@@ -1,0 +1,25 @@
+version: 2.1
+
+executors:
+  node:
+    docker:
+      - image: circleci/node:14.18
+
+jobs:
+  generate_release:
+    executor: node
+    steps:
+      - checkout
+      - run:
+          name: 'Generate Release'
+          command: |
+            sudo npm i -g @semantic-release/changelog @semantic-release/git semantic-release
+            semantic-release
+
+workflows:
+  development:
+    jobs:
+      - generate_release:
+          filters:
+            branches:
+              only: main
