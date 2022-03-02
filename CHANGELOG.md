@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/ae-lexs/ae_albums_api/compare/v1.3.0...v1.4.0) (2022-03-02)
+
+
+### Features
+
+* Add lint and test to the development workflow. ([6158c57](https://github.com/ae-lexs/ae_albums_api/commit/6158c57aef7e9efdaaa518bd12057fa0a0282be3))
+
 # [1.3.0](https://github.com/ae-lexs/ae_albums_api/compare/v1.2.0...v1.3.0) (2022-03-02)
 
 
