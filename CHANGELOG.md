@@ -1,3 +1,12 @@
+# [1.3.0](https://github.com/ae-lexs/ae_albums_api/compare/v1.2.0...v1.3.0) (2022-03-02)
+
+
+### Features
+
+* Add Album entity. ([ef7832f](https://github.com/ae-lexs/ae_albums_api/commit/ef7832fea5f850969355c08bae0e568ae746a64c))
+* Add Make commands. ([a5e4ac6](https://github.com/ae-lexs/ae_albums_api/commit/a5e4ac65ad1c0a9c5a572bb439ef771f2bf248e7))
+* Add PostgresAlbumRepository. ([8a765e5](https://github.com/ae-lexs/ae_albums_api/commit/8a765e579259d27309cdf79725bcd8bb3177d3f3))
+
 # [1.2.0](https://github.com/ae-lexs/ae_albums_api/compare/v1.1.0...v1.2.0) (2022-03-01)
 
 
