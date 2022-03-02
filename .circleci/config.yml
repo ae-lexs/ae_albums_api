@@ -1,9 +1,12 @@
 version: 2.1
 
 executors:
+  golang:
+    docker:
+      - image: cimg/go:1.17.7
   node:
     docker:
-      - image: circleci/node:14.18
+      - image: cimg/node:16.14.0
 
 jobs:
   generate_release:
@@ -16,10 +19,57 @@ jobs:
             sudo npm i -g @semantic-release/changelog @semantic-release/git semantic-release
             semantic-release
 
+  lint:
+    executor: golang
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - go-mod-v1-{{ checksum "go.sum" }}
+      - run:
+          name: Install Dependencies
+          command: make install
+      - save_cache:
+          paths:
+            - "/go/pkg/mod"
+          key: go-mod-v1-{{ checksum "go.sum" }}
+      - run:
+          name: Run Linter
+          command: make lint
+
+  test:
+    executor: golang
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - go-mod-v1-{{ checksum "go.sum" }}
+      - run:
+          name: Install Dependencies
+          command: make install
+      - save_cache:
+          paths:
+            - "/go/pkg/mod"
+          key: go-mod-v1-{{ checksum "go.sum" }}
+      - run:
+          name: Run Tests
+          command: make test
+
 workflows:
   development:
     jobs:
+      - lint:
+          filters:
+            branches:
+              only: main
+      - test:
+          filters:
+            branches:
+              only: main
       - generate_release:
           filters:
             branches:
               only: main
+          requires:
+            - lint
+            - test

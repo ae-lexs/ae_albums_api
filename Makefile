@@ -5,7 +5,7 @@ format:
 	gofmt -w ./..
 
 install:
-	go get .
+	go get ./...
 
 lint:
 	gofmt -d ./..
