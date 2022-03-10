@@ -39,7 +39,7 @@ func TestCreateAlbum(t *testing.T) {
 }
 
 func TestGetAlbums(t *testing.T) {
-	album := &PostgresAlbumRepository{
+	albumRepository := &PostgresAlbumRepository{
 		client: &FakeRepositoryClient{[]entity.Album{}},
 	}
 	expectedAlbum := entity.Album{
@@ -48,9 +48,9 @@ func TestGetAlbums(t *testing.T) {
 		Price:  10.0,
 	}
 	expectedAlbums := []entity.Album{expectedAlbum}
-	album.Create(expectedAlbum)
+	albumRepository.Create(expectedAlbum)
 
-	actualAlbums := album.GetAll()
+	actualAlbums := albumRepository.GetAll()
 
 	if !reflect.DeepEqual(actualAlbums, expectedAlbums) {
 		t.Error("The actualAlbums is not equal to the expectedAlbums")
