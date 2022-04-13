@@ -13,15 +13,15 @@ type RepositoryClient interface {
 }
 
 type PostgresAlbumRepository struct {
-	client RepositoryClient
+	Client RepositoryClient
 }
 
 func (p *PostgresAlbumRepository) Create(album entity.Album) entity.Album {
-	return p.client.Create(&album)
+	return p.Client.Create(&album)
 }
 
 func (p *PostgresAlbumRepository) GetAll() []entity.Album {
 	var albums []entity.Album
 
-	return p.client.Find(&albums)
+	return p.Client.Find(&albums)
 }

@@ -4,7 +4,7 @@ import "gorm.io/gorm"
 
 type Album struct {
 	gorm.Model
-	Title  string
-	Artist string
-	Price  float64
+	Artist string  `json:"artist"`
+	Price  float64 `json:"price"`
+	Title  string  `json:"title"`
 }

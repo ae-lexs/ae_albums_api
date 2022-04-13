@@ -23,7 +23,7 @@ func (f *FakeRepositoryClient) Find(*[]entity.Album) []entity.Album {
 
 func TestCreateAlbum(t *testing.T) {
 	albumRepository := &PostgresAlbumRepository{
-		client: &FakeRepositoryClient{[]entity.Album{}},
+		Client: &FakeRepositoryClient{[]entity.Album{}},
 	}
 	expectedAlbum := entity.Album{
 		Title:  "ANY_TITLE",
@@ -40,7 +40,7 @@ func TestCreateAlbum(t *testing.T) {
 
 func TestGetAlbums(t *testing.T) {
 	albumRepository := &PostgresAlbumRepository{
-		client: &FakeRepositoryClient{[]entity.Album{}},
+		Client: &FakeRepositoryClient{[]entity.Album{}},
 	}
 	expectedAlbum := entity.Album{
 		Title:  "ANY_TITLE",
