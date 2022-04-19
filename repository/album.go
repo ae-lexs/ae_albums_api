@@ -15,7 +15,7 @@ type PostgresAlbumRepository struct {
 }
 
 func (repository *PostgresAlbumRepository) Create(album entity.Album) (entity.Album, error) {
-	if err := repository.Client.Create(album).Error; err != nil {
+	if err := repository.Client.Create(&album).Error; err != nil {
 		return album, err
 	}
 
