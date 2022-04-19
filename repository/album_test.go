@@ -7,23 +7,9 @@ import (
 	"github.com/ae-lexs/ae_albums_api/entity"
 )
 
-type FakeRepositoryClient struct {
-	albums []entity.Album
-}
-
-func (f *FakeRepositoryClient) Create(album *entity.Album) entity.Album {
-	f.albums = append(f.albums, *album)
-
-	return *album
-}
-
-func (f *FakeRepositoryClient) Find(*[]entity.Album) []entity.Album {
-	return f.albums
-}
-
 func TestCreateAlbum(t *testing.T) {
-	albumRepository := &PostgresAlbumRepository{
-		Client: &FakeRepositoryClient{[]entity.Album{}},
+	albumRepository := FakeAlbumRepository{
+		Client: FakeRepositoryClient{[]entity.Album{}},
 	}
 	expectedAlbum := entity.Album{
 		Title:  "ANY_TITLE",
@@ -31,7 +17,7 @@ func TestCreateAlbum(t *testing.T) {
 		Price:  10.0,
 	}
 
-	actualCreatedAlbum := albumRepository.Create(expectedAlbum)
+	actualCreatedAlbum, _ := albumRepository.Create(expectedAlbum)
 
 	if actualCreatedAlbum != expectedAlbum {
 		t.Error("The actual_created_album is not equal to the expectedAlbum")
@@ -39,8 +25,8 @@ func TestCreateAlbum(t *testing.T) {
 }
 
 func TestGetAlbums(t *testing.T) {
-	albumRepository := &PostgresAlbumRepository{
-		Client: &FakeRepositoryClient{[]entity.Album{}},
+	albumRepository := FakeAlbumRepository{
+		Client: FakeRepositoryClient{[]entity.Album{}},
 	}
 	expectedAlbum := entity.Album{
 		Title:  "ANY_TITLE",
@@ -50,7 +36,7 @@ func TestGetAlbums(t *testing.T) {
 	expectedAlbums := []entity.Album{expectedAlbum}
 	albumRepository.Create(expectedAlbum)
 
-	actualAlbums := albumRepository.GetAll()
+	actualAlbums, _ := albumRepository.GetAll()
 
 	if !reflect.DeepEqual(actualAlbums, expectedAlbums) {
 		t.Error("The actualAlbums is not equal to the expectedAlbums")
