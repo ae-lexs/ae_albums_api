@@ -3,17 +3,17 @@ package repository
 import "github.com/ae-lexs/ae_albums_api/entity"
 
 type FakeRepositoryClient struct {
-	albums []entity.Album
+	Albums []entity.Album
 }
 
 func (client *FakeRepositoryClient) Create(album entity.Album) error {
-	client.albums = append(client.albums, album)
+	client.Albums = append(client.Albums, album)
 
 	return nil
 }
 
 func (client *FakeRepositoryClient) Find([]entity.Album) ([]entity.Album, error) {
-	return client.albums, nil
+	return client.Albums, nil
 }
 
 type FakeAlbumRepository struct {
