@@ -22,7 +22,7 @@ func (mock *albumRepositoryMock) Create(album entity.Album) (entity.Album, error
 func (mock *albumRepositoryMock) GetAll() ([]entity.Album, error) {
 	args := mock.Called()
 
-	return []entity.Album{}, args.Error(1)
+	return args.Get(0).([]entity.Album), args.Error(1)
 }
 
 func TestCreateAlbumSuccess(t *testing.T) {
@@ -37,7 +37,7 @@ func TestCreateAlbumSuccess(t *testing.T) {
 		Message:    "Created",
 		Data:       expectedAlbum,
 	}
-	albumHandler := AlbumHandler{
+	albumHandler := AlbumHandlerREST{
 		Repository: albumRepository,
 	}
 
@@ -64,7 +64,7 @@ func TestCreateAlbumError(t *testing.T) {
 		Message:    "Internal Server Error",
 		Data:       nil,
 	}
-	albumHandler := AlbumHandler{
+	albumHandler := AlbumHandlerREST{
 		Repository: albumRepository,
 	}
 
@@ -75,6 +75,49 @@ func TestCreateAlbumError(t *testing.T) {
 		Price:  expectedAlbum.Price,
 		Title:  expectedAlbum.Title,
 	})
+
+	assert.Equal(t, actualResponse, expectedResponse, "should return the error response")
+}
+
+func TestGetAlbumsSuccess(t *testing.T) {
+	albumRepository := new(albumRepositoryMock)
+	expectedAlbums := []entity.Album{
+		{
+			Artist: "ANY_ARTIST",
+			Price:  100.00,
+			Title:  "ANY_TITLE",
+		},
+	}
+	expectedResponse := entity.Response{
+		StatusCode: 200,
+		Message:    "OK",
+		Data:       expectedAlbums,
+	}
+	albumHandler := AlbumHandlerREST{
+		Repository: albumRepository,
+	}
+
+	albumRepository.On("GetAll").Return(expectedAlbums, nil)
+
+	actualResponse := albumHandler.GetAlbums()
+
+	assert.Equal(t, actualResponse, expectedResponse, "should return the success response")
+}
+
+func TestGetAlbumsError(t *testing.T) {
+	albumRepository := new(albumRepositoryMock)
+	expectedResponse := entity.Response{
+		StatusCode: 500,
+		Message:    "Internal Server Error",
+		Data:       nil,
+	}
+	albumHandler := AlbumHandlerREST{
+		Repository: albumRepository,
+	}
+
+	albumRepository.On("GetAll").Return([]entity.Album{}, errors.New("Get Error"))
+
+	actualResponse := albumHandler.GetAlbums()
 
 	assert.Equal(t, actualResponse, expectedResponse, "should return the error response")
 }

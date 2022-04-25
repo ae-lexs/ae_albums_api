@@ -10,13 +10,19 @@ import (
 const (
 	createdMessage             = "Created"
 	internalServerErrorMessage = "Internal Server Error"
+	okMessage                  = "OK"
 )
 
-type AlbumHandler struct {
+type AlbumHandler interface {
+	CreateAlbum(entity.CreateAlbumRequest) entity.Response
+	GetAlbums() entity.Response
+}
+
+type AlbumHandlerREST struct {
 	Repository repository.AlbumRepository
 }
 
-func (handler *AlbumHandler) CreateAlbum(receivedAlbum entity.CreateAlbumRequest) entity.Response {
+func (handler *AlbumHandlerREST) CreateAlbum(receivedAlbum entity.CreateAlbumRequest) entity.Response {
 	newAlbum := entity.Album{
 		Artist: receivedAlbum.Artist,
 		Price:  receivedAlbum.Price,
@@ -37,5 +43,23 @@ func (handler *AlbumHandler) CreateAlbum(receivedAlbum entity.CreateAlbumRequest
 		StatusCode: http.StatusCreated,
 		Message:    createdMessage,
 		Data:       createdAlbum,
+	}
+}
+
+func (handler *AlbumHandlerREST) GetAlbums() entity.Response {
+	foundAlbums, err := handler.Repository.GetAll()
+
+	if err != nil {
+		return entity.Response{
+			StatusCode: http.StatusInternalServerError,
+			Message:    internalServerErrorMessage,
+			Data:       nil,
+		}
+	}
+
+	return entity.Response{
+		StatusCode: http.StatusOK,
+		Message:    okMessage,
+		Data:       foundAlbums,
 	}
 }
