@@ -1,3 +1,21 @@
+# [1.6.0](https://github.com/ae-lexs/ae_albums_api/compare/v1.5.0...v1.6.0) (2022-04-25)
+
+
+### Bug Fixes
+
+* Fix album the creation using the gorm.Model properties. ([a46e954](https://github.com/ae-lexs/ae_albums_api/commit/a46e9547498fcbee209c9ca5e1c2967d89d3adaa))
+
+
+### Features
+
+* Add CreateAlbum to AlbumHandler. ([75beafb](https://github.com/ae-lexs/ae_albums_api/commit/75beafb418daffdefd466fca91d3913e6a3323d3))
+* Add GetAlbums to AlbumHandler. ([3db3918](https://github.com/ae-lexs/ae_albums_api/commit/3db39184ca48c34c27d5516d2a8afb2b70f947ff))
+
+
+### Performance Improvements
+
+* Refactor the routes using a handler. ([c28b10c](https://github.com/ae-lexs/ae_albums_api/commit/c28b10cec9f713628d3f3cf81b2617bc88d9c115))
+
 # [1.5.0](https://github.com/ae-lexs/ae_albums_api/compare/v1.4.0...v1.5.0) (2022-04-19)
 
 
