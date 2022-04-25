@@ -4,36 +4,30 @@ import (
 	"net/http"
 
 	"github.com/ae-lexs/ae_albums_api/entity"
-	"github.com/ae-lexs/ae_albums_api/repository"
+	"github.com/ae-lexs/ae_albums_api/handler"
 	"github.com/gin-gonic/gin"
 )
 
 type AlbumRoute struct {
-	Repository repository.AlbumRepository
+	Handler handler.AlbumHandler
 }
 
-func (a *AlbumRoute) GetAlbums(c *gin.Context) {
-	albums, err := a.Repository.GetAll()
+func (route *AlbumRoute) CreateAlbum(c *gin.Context) {
+	var receivedAlbum entity.CreateAlbumRequest
 
-	if err != nil {
-		c.IndentedJSON(http.StatusInternalServerError, gin.H{})
+	if err := c.BindJSON(&receivedAlbum); err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{})
 	}
 
-	c.IndentedJSON(http.StatusOK, albums)
+	response := route.Handler.CreateAlbum(receivedAlbum)
+
+	c.IndentedJSON(response.StatusCode, response)
 }
 
-func (a *AlbumRoute) CreateAlbum(c *gin.Context) {
-	var newAlbum entity.Album
+func (route *AlbumRoute) GetAlbums(c *gin.Context) {
+	response := route.Handler.GetAlbums()
 
-	if err := c.BindJSON(&newAlbum); err != nil {
-		return
-	}
-
-	if _, err := a.Repository.Create(newAlbum); err != nil {
-		c.IndentedJSON(http.StatusInternalServerError, gin.H{})
-	}
-
-	c.IndentedJSON(http.StatusCreated, newAlbum)
+	c.IndentedJSON(response.StatusCode, response)
 }
 
 // func getAlbumById(c *gin.Context) {

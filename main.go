@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/ae-lexs/ae_albums_api/entity"
+	"github.com/ae-lexs/ae_albums_api/handler"
 	"github.com/ae-lexs/ae_albums_api/repository"
 	"github.com/ae-lexs/ae_albums_api/route"
 	"github.com/gin-gonic/gin"
@@ -33,8 +34,11 @@ func main() {
 	albumRepository := repository.PostgresAlbumRepository{
 		Client: postgresClient,
 	}
-	albumRoutes := route.AlbumRoute{
+	albumHandlerREST := handler.AlbumHandlerREST{
 		Repository: &albumRepository,
+	}
+	albumRoutes := route.AlbumRoute{
+		Handler: &albumHandlerREST,
 	}
 
 	router.GET("/albums", albumRoutes.GetAlbums)
