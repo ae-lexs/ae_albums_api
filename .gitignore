@@ -2,4 +2,5 @@
 
 # Files
 
+.env
 coverage.txt
