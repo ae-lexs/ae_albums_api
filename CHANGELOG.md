@@ -1,3 +1,12 @@
+# [1.7.0](https://github.com/ae-lexs/ae_albums_api/compare/v1.6.0...v1.7.0) (2022-04-26)
+
+
+### Features
+
+* Add client package. ([463df1a](https://github.com/ae-lexs/ae_albums_api/commit/463df1a3d22a371f8a37752de3932f46e5835dc8))
+* Add config package. ([1ce434a](https://github.com/ae-lexs/ae_albums_api/commit/1ce434ac8f12310404f49955506b7a368eb09720))
+* Refactor main using config and client packages. ([bde5d5b](https://github.com/ae-lexs/ae_albums_api/commit/bde5d5b70db57420a103e7b1c664dc1809089b0c))
+
 # [1.6.0](https://github.com/ae-lexs/ae_albums_api/compare/v1.5.0...v1.6.0) (2022-04-25)
 
 
