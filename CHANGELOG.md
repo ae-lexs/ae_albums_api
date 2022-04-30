@@ -1,3 +1,20 @@
+# [2.0.0](https://github.com/ae-lexs/ae_albums_api/compare/v1.7.0...v2.0.0) (2022-04-30)
+
+
+### Features
+
+* Update README file adding Installation and Usage sections. ([5a3b427](https://github.com/ae-lexs/ae_albums_api/commit/5a3b4275edfc5f1338f5d601a3ca0fa9c7dca975))
+
+
+### Performance Improvements
+
+* Tidy the packages. ([2efefe5](https://github.com/ae-lexs/ae_albums_api/commit/2efefe5b5de9e79bdd1966fc9825dce4b2a71a10))
+
+
+### BREAKING CHANGES
+
+* Remove unused packages.
+
 # [1.7.0](https://github.com/ae-lexs/ae_albums_api/compare/v1.6.0...v1.7.0) (2022-04-26)
 
 
