@@ -11,8 +11,8 @@ import (
 
 func main() {
 	router := gin.Default()
-	config := config.GetConfig()
-	postgresClient := client.SetUpPostgres(
+	config := config.Get()
+	postgresClient := client.GetPostgres(
 		config.DBName,
 		config.DBHost,
 		config.DBPassword,

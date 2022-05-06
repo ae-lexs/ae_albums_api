@@ -15,7 +15,7 @@ type config struct {
 	Environment string
 }
 
-func GetConfig() config {
+func Get() config {
 	environment := os.Getenv("ENVIRONMENT")
 
 	if environment == "" || environment == "DEVELOPMENT" {

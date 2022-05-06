@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func SetUpPostgres(dbName, dbHost, dbPassword, dbUser, dbPort string) *gorm.DB {
+func GetPostgres(dbName, dbHost, dbPassword, dbUser, dbPort string) *gorm.DB {
 	postgresConfig := fmt.Sprintf(
 		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
 		dbHost,
