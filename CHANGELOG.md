@@ -1,3 +1,14 @@
+## [2.0.1](https://github.com/ae-lexs/ae_albums_api/compare/v2.0.0...v2.0.1) (2022-05-06)
+
+
+### Performance Improvements
+
+* Rename album handler tests. ([fd0d4eb](https://github.com/ae-lexs/ae_albums_api/commit/fd0d4ebac894d4c66f6d8adc4f73220e95bcfa53))
+* Rename config and client methods. ([59465bb](https://github.com/ae-lexs/ae_albums_api/commit/59465bb55c2f7bb0d0cfe183a3bb9c620e8c6c09))
+* Rename the items of the album handler. ([a2404dc](https://github.com/ae-lexs/ae_albums_api/commit/a2404dc5c2d7a4e8871ccfd03d07dfce8003d871))
+* Rename the items of the album repository. ([b0e1949](https://github.com/ae-lexs/ae_albums_api/commit/b0e1949876be9ba2d8bbbdb1eee3b81a78c4ed00))
+* Rename the items of the album route. ([3362c44](https://github.com/ae-lexs/ae_albums_api/commit/3362c44eaf2ec15ee075af7d9fdaecdfdfd629a3))
+
 # [2.0.0](https://github.com/ae-lexs/ae_albums_api/compare/v1.7.0...v2.0.0) (2022-04-30)
 
 
