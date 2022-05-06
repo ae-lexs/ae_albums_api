@@ -25,7 +25,7 @@ func (mock *albumRepositoryMock) GetAll() ([]entity.Album, error) {
 	return args.Get(0).([]entity.Album), args.Error(1)
 }
 
-func TestCreateAlbumSuccess(t *testing.T) {
+func TestCreateAlbumOK(t *testing.T) {
 	albumRepository := new(albumRepositoryMock)
 	expectedAlbum := entity.Album{
 		Artist: "ANY_ARTIST",
@@ -52,7 +52,7 @@ func TestCreateAlbumSuccess(t *testing.T) {
 	assert.Equal(t, actualResponse, expectedResponse, "should return the success response")
 }
 
-func TestCreateAlbumError(t *testing.T) {
+func TestCreateAlbumInternalServerError(t *testing.T) {
 	albumRepository := new(albumRepositoryMock)
 	expectedAlbum := entity.Album{
 		Artist: "ANY_ARTIST",
@@ -79,7 +79,7 @@ func TestCreateAlbumError(t *testing.T) {
 	assert.Equal(t, actualResponse, expectedResponse, "should return the error response")
 }
 
-func TestGetAlbumsSuccess(t *testing.T) {
+func TestGetAlbumsOK(t *testing.T) {
 	albumRepository := new(albumRepositoryMock)
 	expectedAlbums := []entity.Album{
 		{
@@ -104,7 +104,7 @@ func TestGetAlbumsSuccess(t *testing.T) {
 	assert.Equal(t, actualResponse, expectedResponse, "should return the success response")
 }
 
-func TestGetAlbumsError(t *testing.T) {
+func TestGetAlbumsInternalServerError(t *testing.T) {
 	albumRepository := new(albumRepositoryMock)
 	expectedResponse := entity.Response{
 		StatusCode: 500,
