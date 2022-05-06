@@ -19,7 +19,7 @@ type AlbumHandler interface {
 }
 
 type AlbumHandlerREST struct {
-	Repository repository.AlbumRepository
+	Repository repository.Album
 }
 
 func (handler *AlbumHandlerREST) CreateAlbum(receivedAlbum entity.CreateAlbumRequest) entity.Response {

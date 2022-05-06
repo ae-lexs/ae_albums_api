@@ -19,7 +19,7 @@ func main() {
 		config.DBUser,
 		config.DBPort,
 	)
-	albumRepository := repository.PostgresAlbumRepository{
+	albumRepository := repository.AlbumPostgres{
 		Client: postgresClient,
 	}
 	albumHandlerREST := handler.AlbumHandlerREST{

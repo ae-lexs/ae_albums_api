@@ -5,16 +5,16 @@ import (
 	"gorm.io/gorm"
 )
 
-type AlbumRepository interface {
+type Album interface {
 	Create(entity.Album) (entity.Album, error)
 	GetAll() ([]entity.Album, error)
 }
 
-type PostgresAlbumRepository struct {
+type AlbumPostgres struct {
 	Client *gorm.DB
 }
 
-func (repository *PostgresAlbumRepository) Create(album entity.Album) (entity.Album, error) {
+func (repository *AlbumPostgres) Create(album entity.Album) (entity.Album, error) {
 	if err := repository.Client.Create(&album).Error; err != nil {
 		return album, err
 	}
@@ -22,7 +22,7 @@ func (repository *PostgresAlbumRepository) Create(album entity.Album) (entity.Al
 	return album, nil
 }
 
-func (repository *PostgresAlbumRepository) GetAll() ([]entity.Album, error) {
+func (repository *AlbumPostgres) GetAll() ([]entity.Album, error) {
 	var albums []entity.Album
 
 	if err := repository.Client.Find(&albums).Error; err != nil {
