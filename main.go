@@ -25,12 +25,12 @@ func main() {
 	albumHandlerREST := handler.AlbumREST{
 		Repository: &albumRepository,
 	}
-	albumRoutes := route.AlbumRoute{
+	albumRoutes := route.Album{
 		Handler: &albumHandlerREST,
 	}
 
-	router.GET("/albums", albumRoutes.GetAlbums)
-	router.POST("/albums", albumRoutes.CreateAlbum)
+	router.GET("/albums", albumRoutes.Get)
+	router.POST("/albums", albumRoutes.Create)
 
 	router.Run("localhost:8080")
 }
