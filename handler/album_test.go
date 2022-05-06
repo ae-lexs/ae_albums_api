@@ -37,7 +37,7 @@ func TestCreateAlbumOK(t *testing.T) {
 		Message:    "Created",
 		Data:       expectedAlbum,
 	}
-	albumHandler := AlbumHandlerREST{
+	albumHandler := AlbumREST{
 		Repository: albumRepository,
 	}
 
@@ -64,7 +64,7 @@ func TestCreateAlbumInternalServerError(t *testing.T) {
 		Message:    "Internal Server Error",
 		Data:       nil,
 	}
-	albumHandler := AlbumHandlerREST{
+	albumHandler := AlbumREST{
 		Repository: albumRepository,
 	}
 
@@ -93,7 +93,7 @@ func TestGetAlbumsOK(t *testing.T) {
 		Message:    "OK",
 		Data:       expectedAlbums,
 	}
-	albumHandler := AlbumHandlerREST{
+	albumHandler := AlbumREST{
 		Repository: albumRepository,
 	}
 
@@ -111,7 +111,7 @@ func TestGetAlbumsInternalServerError(t *testing.T) {
 		Message:    "Internal Server Error",
 		Data:       nil,
 	}
-	albumHandler := AlbumHandlerREST{
+	albumHandler := AlbumREST{
 		Repository: albumRepository,
 	}
 

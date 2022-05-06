@@ -13,16 +13,16 @@ const (
 	okMessage                  = "OK"
 )
 
-type AlbumHandler interface {
+type Album interface {
 	CreateAlbum(entity.CreateAlbumRequest) entity.Response
 	GetAlbums() entity.Response
 }
 
-type AlbumHandlerREST struct {
+type AlbumREST struct {
 	Repository repository.Album
 }
 
-func (handler *AlbumHandlerREST) CreateAlbum(receivedAlbum entity.CreateAlbumRequest) entity.Response {
+func (handler *AlbumREST) CreateAlbum(receivedAlbum entity.CreateAlbumRequest) entity.Response {
 	newAlbum := entity.Album{
 		Artist: receivedAlbum.Artist,
 		Price:  receivedAlbum.Price,
@@ -46,7 +46,7 @@ func (handler *AlbumHandlerREST) CreateAlbum(receivedAlbum entity.CreateAlbumReq
 	}
 }
 
-func (handler *AlbumHandlerREST) GetAlbums() entity.Response {
+func (handler *AlbumREST) GetAlbums() entity.Response {
 	foundAlbums, err := handler.Repository.GetAll()
 
 	if err != nil {

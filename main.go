@@ -22,7 +22,7 @@ func main() {
 	albumRepository := repository.AlbumPostgres{
 		Client: postgresClient,
 	}
-	albumHandlerREST := handler.AlbumHandlerREST{
+	albumHandlerREST := handler.AlbumREST{
 		Repository: &albumRepository,
 	}
 	albumRoutes := route.AlbumRoute{

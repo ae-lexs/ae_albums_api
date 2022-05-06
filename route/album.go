@@ -9,7 +9,7 @@ import (
 )
 
 type AlbumRoute struct {
-	Handler handler.AlbumHandler
+	Handler handler.Album
 }
 
 func (route *AlbumRoute) CreateAlbum(c *gin.Context) {
