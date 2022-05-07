@@ -31,7 +31,6 @@ func TestCreateAlbum(t *testing.T) {
 		Price:  100.00,
 		Title:  "ANY_TITLE",
 	}
-
 	testCases := []struct {
 		expectedResponse   entity.Response
 		input              entity.CreateAlbumRequest
@@ -93,8 +92,7 @@ func TestCreateAlbum(t *testing.T) {
 	}
 }
 
-func TestGetAlbumsOK(t *testing.T) {
-	albumRepository := new(albumRepositoryMock)
+func TestGetAlbums(t *testing.T) {
 	expectedAlbums := []entity.Album{
 		{
 			Artist: "ANY_ARTIST",
@@ -102,36 +100,49 @@ func TestGetAlbumsOK(t *testing.T) {
 			Title:  "ANY_TITLE",
 		},
 	}
-	expectedResponse := entity.Response{
-		StatusCode: 200,
-		Message:    "OK",
-		Data:       expectedAlbums,
+	testCases := []struct {
+		expectedResponse   entity.Response
+		message            string
+		mockMethodResponse []entity.Album
+		mockMethodError    error
+		name               string
+	}{
+		{
+			expectedResponse: entity.Response{
+				StatusCode: 200,
+				Message:    "OK",
+				Data:       expectedAlbums,
+			},
+			message:            "should return the OK Response",
+			mockMethodResponse: expectedAlbums,
+			mockMethodError:    nil,
+			name:               "OK Response",
+		},
+		{
+			expectedResponse: entity.Response{
+				StatusCode: 500,
+				Message:    "Internal Server Error",
+				Data:       nil,
+			},
+			message:            "should return the Internal Server Error Response",
+			mockMethodResponse: []entity.Album{},
+			mockMethodError:    errors.New("Get Error"),
+			name:               "Internal Server Error Response",
+		},
 	}
-	albumHandler := AlbumREST{
-		Repository: albumRepository,
+
+	for _, testCase := range testCases {
+		t.Run(testCase.name, func(t *testing.T) {
+			albumRepository := new(albumRepositoryMock)
+			albumHandler := AlbumREST{
+				Repository: albumRepository,
+			}
+
+			albumRepository.On("GetAll").Return(testCase.mockMethodResponse, testCase.mockMethodError)
+
+			actualResponse := albumHandler.GetAlbums()
+
+			assert.Equal(t, actualResponse, testCase.expectedResponse, testCase.message)
+		})
 	}
-
-	albumRepository.On("GetAll").Return(expectedAlbums, nil)
-
-	actualResponse := albumHandler.GetAlbums()
-
-	assert.Equal(t, actualResponse, expectedResponse, "should return the success response")
-}
-
-func TestGetAlbumsInternalServerError(t *testing.T) {
-	albumRepository := new(albumRepositoryMock)
-	expectedResponse := entity.Response{
-		StatusCode: 500,
-		Message:    "Internal Server Error",
-		Data:       nil,
-	}
-	albumHandler := AlbumREST{
-		Repository: albumRepository,
-	}
-
-	albumRepository.On("GetAll").Return([]entity.Album{}, errors.New("Get Error"))
-
-	actualResponse := albumHandler.GetAlbums()
-
-	assert.Equal(t, actualResponse, expectedResponse, "should return the error response")
 }
