@@ -39,3 +39,48 @@ func TestCreate(t *testing.T) {
 
 	assert.True(t, modelMock.AssertExpectations(t))
 }
+
+func TestGetAll(t *testing.T) {
+	expectedFoundAlbums := []entity.Album{
+		{
+			Artist: "ANY_ARTIST",
+			Price:  100.0,
+			Title:  "ANY_TITLE",
+		},
+	}
+	testCases := []struct {
+		expectedError      error
+		expectedResponse   []entity.Album
+		message            string
+		mockMethodResponse []entity.Album
+		name               string
+	}{
+		{
+			expectedError:      nil,
+			expectedResponse:   expectedFoundAlbums,
+			mockMethodResponse: expectedFoundAlbums,
+			name:               "Get All Albums Without Error",
+		},
+		{
+			expectedError:      repository.GetAllError,
+			expectedResponse:   []entity.Album{},
+			mockMethodResponse: []entity.Album{},
+			name:               "Get All Albums With Error",
+		},
+	}
+
+	for _, testCase := range testCases {
+		t.Run(testCase.name, func(t *testing.T) {
+			modelMock := new(ModelMock)
+			respository := repository.NewAlbum(modelMock)
+
+			modelMock.On("Find").Return(testCase.mockMethodResponse, testCase.expectedError)
+
+			actualAlbums, actualError := respository.GetAll()
+
+			assert.True(t, modelMock.AssertExpectations(t))
+			assert.ElementsMatch(t, actualAlbums, testCase.expectedResponse)
+			assert.Equal(t, actualError, testCase.expectedError)
+		})
+	}
+}
