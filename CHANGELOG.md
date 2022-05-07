@@ -1,3 +1,11 @@
+## [2.0.2](https://github.com/ae-lexs/ae_albums_api/compare/v2.0.1...v2.0.2) (2022-05-07)
+
+
+### Performance Improvements
+
+* Refactor TestCreateAlbum using table driven tests. ([57e0c98](https://github.com/ae-lexs/ae_albums_api/commit/57e0c980a425355b4e4c2b7d541fae665ef69d3b))
+* Refactor TestGetAlbums using table driven tests. ([6ca6bd0](https://github.com/ae-lexs/ae_albums_api/commit/6ca6bd074ec0864d2600e94bcced8467740fcf04))
+
 ## [2.0.1](https://github.com/ae-lexs/ae_albums_api/compare/v2.0.0...v2.0.1) (2022-05-06)
 
 
