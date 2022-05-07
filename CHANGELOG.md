@@ -1,3 +1,27 @@
+# [3.0.0](https://github.com/ae-lexs/ae_albums_api/compare/v2.0.3...v3.0.0) (2022-05-07)
+
+
+### Bug Fixes
+
+* Handler error in Create method of album repository. ([2d891e8](https://github.com/ae-lexs/ae_albums_api/commit/2d891e88c1a104e1b4beb74f1dba554c436b99c9))
+
+
+### Features
+
+* Add GetAll method to the album repository. ([0330f7b](https://github.com/ae-lexs/ae_albums_api/commit/0330f7b291ff9315b6584fda72127aaccfe4fb02))
+* Add model package. ([14ac52c](https://github.com/ae-lexs/ae_albums_api/commit/14ac52ceb1f78cd146d643f1791e2f5a71f3ddec))
+
+
+### Performance Improvements
+
+* Refactor albumREST handler and album route. ([778b97a](https://github.com/ae-lexs/ae_albums_api/commit/778b97af9cab0f5eef09a113034fca9fc4c4a726))
+* Refactor the album respository. ([f64014f](https://github.com/ae-lexs/ae_albums_api/commit/f64014f59b3dc3de42d2fd3e4f273b6607a69805))
+
+
+### BREAKING CHANGES
+
+* Use the new album repository version based on the album model.
+
 ## [2.0.3](https://github.com/ae-lexs/ae_albums_api/compare/v2.0.2...v2.0.3) (2022-05-07)
 
 
