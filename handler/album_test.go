@@ -1,10 +1,11 @@
-package handler
+package handler_test
 
 import (
 	"errors"
 	"testing"
 
 	"github.com/ae-lexs/ae_albums_api/entity"
+	"github.com/ae-lexs/ae_albums_api/handler"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -79,9 +80,7 @@ func TestCreateAlbum(t *testing.T) {
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
 			albumRepository := new(albumRepositoryMock)
-			albumHandler := AlbumREST{
-				Repository: albumRepository,
-			}
+			albumHandler := handler.NewAlbumREST(albumRepository)
 
 			albumRepository.On("Create", testCase.mockMethodInput).Return(testCase.mockMethodResponse, testCase.mockMethodError)
 
@@ -134,9 +133,7 @@ func TestGetAlbums(t *testing.T) {
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
 			albumRepository := new(albumRepositoryMock)
-			albumHandler := AlbumREST{
-				Repository: albumRepository,
-			}
+			albumHandler := handler.NewAlbumREST(albumRepository)
 
 			albumRepository.On("GetAll").Return(testCase.mockMethodResponse, testCase.mockMethodError)
 
