@@ -1,17 +1,20 @@
 package main
 
 import (
+	"context"
+	"fmt"
+	"log"
+	"net/http"
+	"os"
+	"os/signal"
+	"time"
+
 	"github.com/ae-lexs/ae_albums_api/client"
 	"github.com/ae-lexs/ae_albums_api/config"
-	"github.com/ae-lexs/ae_albums_api/handler"
-	"github.com/ae-lexs/ae_albums_api/model"
-	"github.com/ae-lexs/ae_albums_api/repository"
 	"github.com/ae-lexs/ae_albums_api/route"
-	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	router := gin.Default()
 	config := config.Get()
 	postgresClient := client.GetPostgres(
 		config.DBName,
@@ -20,13 +23,35 @@ func main() {
 		config.DBUser,
 		config.DBPort,
 	)
-	albumModel := model.NewAlbumPostgres(postgresClient)
-	albumRepository := repository.NewAlbum(&albumModel)
-	albumHandlerREST := handler.NewAlbumREST(&albumRepository)
-	albumRoutes := route.NewAlbum(&albumHandlerREST)
+	ginRouter := route.GetGinRouter(postgresClient)
+	server := http.Server{
+		Addr:         fmt.Sprintf(":%v", config.ServerPort),
+		Handler:      ginRouter,
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 10 * time.Second,
+		IdleTimeout:  120 * time.Second,
+	}
 
-	router.GET("/albums", albumRoutes.Get)
-	router.POST("/albums", albumRoutes.Create)
+	go func() {
+		log.Printf("Server running on port %v", config.ServerPort)
 
-	router.Run("localhost:8080")
+		if err := server.ListenAndServe(); err != nil {
+			log.Printf("Error running the server: %v", err)
+
+			os.Exit(1)
+		}
+	}()
+
+	channel := make(chan os.Signal, 1)
+
+	signal.Notify(channel, os.Interrupt)
+	signal.Notify(channel, os.Kill)
+
+	signalChannel := <-channel
+
+	log.Printf("Got signal: %v", signalChannel)
+
+	timeoutContext, _ := context.WithTimeout(context.Background(), 30*time.Second)
+
+	server.Shutdown(timeoutContext)
 }

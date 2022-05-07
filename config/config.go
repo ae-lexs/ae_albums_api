@@ -13,6 +13,7 @@ type config struct {
 	DBPort      string
 	DBUser      string
 	Environment string
+	ServerPort  string
 }
 
 func Get() config {
@@ -29,5 +30,6 @@ func Get() config {
 		DBPort:      os.Getenv("DB_PORT"),
 		DBUser:      os.Getenv("DB_USER"),
 		Environment: environment,
+		ServerPort:  os.Getenv("SERVER_PORT"),
 	}
 }
