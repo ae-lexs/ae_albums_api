@@ -1,3 +1,15 @@
+# [4.0.0](https://github.com/ae-lexs/ae_albums_api/compare/v3.0.0...v4.0.0) (2022-05-07)
+
+
+### Features
+
+* Create a http server for the application. ([87a5f20](https://github.com/ae-lexs/ae_albums_api/commit/87a5f206d82dd6d5c62913546499642910ff845c))
+
+
+### BREAKING CHANGES
+
+* Refactor the main package using gin as router in a http server.
+
 # [3.0.0](https://github.com/ae-lexs/ae_albums_api/compare/v2.0.3...v3.0.0) (2022-05-07)
 
 
