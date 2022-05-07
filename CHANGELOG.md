@@ -1,3 +1,10 @@
+## [2.0.3](https://github.com/ae-lexs/ae_albums_api/compare/v2.0.2...v2.0.3) (2022-05-07)
+
+
+### Performance Improvements
+
+* Add NewAlbumREST to make repository private. ([a8213c4](https://github.com/ae-lexs/ae_albums_api/commit/a8213c428ab7ac4d5b4dd3eaff2bda4e44d3a66e))
+
 ## [2.0.2](https://github.com/ae-lexs/ae_albums_api/compare/v2.0.1...v2.0.2) (2022-05-07)
 
 
