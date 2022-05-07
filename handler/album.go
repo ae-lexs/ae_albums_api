@@ -14,28 +14,26 @@ const (
 )
 
 type Album interface {
-	CreateAlbum(entity.CreateAlbumRequest) entity.Response
-	GetAlbums() entity.Response
+	Create(entity.CreateAlbumRequest) entity.Response
+	Get() entity.Response
 }
 
-type AlbumREST struct {
+type albumREST struct {
 	repository repository.Album
 }
 
-func NewAlbumREST(repository repository.Album) AlbumREST {
-	return AlbumREST{
+func NewAlbumREST(repository repository.Album) albumREST {
+	return albumREST{
 		repository: repository,
 	}
 }
 
-func (handler *AlbumREST) CreateAlbum(receivedAlbum entity.CreateAlbumRequest) entity.Response {
-	newAlbum := entity.Album{
-		Artist: receivedAlbum.Artist,
-		Price:  receivedAlbum.Price,
-		Title:  receivedAlbum.Title,
-	}
-
-	createdAlbum, err := handler.repository.Create(newAlbum)
+func (handler *albumREST) Create(receivedAlbum entity.CreateAlbumRequest) entity.Response {
+	createdAlbum, err := handler.repository.Create(
+		receivedAlbum.Artist,
+		receivedAlbum.Price,
+		receivedAlbum.Title,
+	)
 
 	if err != nil {
 		return entity.Response{
@@ -52,7 +50,7 @@ func (handler *AlbumREST) CreateAlbum(receivedAlbum entity.CreateAlbumRequest) e
 	}
 }
 
-func (handler *AlbumREST) GetAlbums() entity.Response {
+func (handler *albumREST) Get() entity.Response {
 	foundAlbums, err := handler.repository.GetAll()
 
 	if err != nil {

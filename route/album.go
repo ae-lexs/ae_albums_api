@@ -8,24 +8,30 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type Album struct {
-	Handler handler.Album
+type album struct {
+	handler handler.Album
 }
 
-func (route *Album) Create(c *gin.Context) {
+func NewAlbum(handler handler.Album) album {
+	return album{
+		handler: handler,
+	}
+}
+
+func (route *album) Create(c *gin.Context) {
 	var receivedAlbum entity.CreateAlbumRequest
 
 	if err := c.BindJSON(&receivedAlbum); err != nil {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{})
 	}
 
-	response := route.Handler.CreateAlbum(receivedAlbum)
+	response := route.handler.Create(receivedAlbum)
 
 	c.IndentedJSON(response.StatusCode, response)
 }
 
-func (route *Album) Get(c *gin.Context) {
-	response := route.Handler.GetAlbums()
+func (route *album) Get(c *gin.Context) {
+	response := route.handler.Get()
 
 	c.IndentedJSON(response.StatusCode, response)
 }
