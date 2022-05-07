@@ -31,13 +31,52 @@ func TestCreate(t *testing.T) {
 		Price:  100.0,
 		Title:  "ANY_TITLE",
 	}
-	modelMock := new(ModelMock)
-	respository := repository.NewAlbum(modelMock)
-	modelMock.On("Create", expectedAlbum).Return(expectedAlbum, nil)
+	testCases := []struct {
+		expectedAlbum entity.Album
+		artist        string
+		expectedError error
+		price         float64
+		title         string
+		mockInput     entity.Album
+		name          string
+	}{
+		{
+			expectedAlbum: expectedAlbum,
+			artist:        expectedAlbum.Artist,
+			expectedError: nil,
+			price:         expectedAlbum.Price,
+			title:         expectedAlbum.Title,
+			mockInput:     expectedAlbum,
+			name:          "Create Album Without Error",
+		},
+		{
+			expectedAlbum: entity.Album{},
+			artist:        expectedAlbum.Artist,
+			expectedError: repository.CreateError,
+			price:         expectedAlbum.Price,
+			title:         expectedAlbum.Title,
+			mockInput:     expectedAlbum,
+			name:          "Create Album With Error",
+		},
+	}
 
-	respository.Create(expectedAlbum.Artist, expectedAlbum.Price, expectedAlbum.Title)
+	for _, testCase := range testCases {
+		t.Run(testCase.name, func(t *testing.T) {
+			modelMock := new(ModelMock)
+			respository := repository.NewAlbum(modelMock)
+			modelMock.On("Create", testCase.mockInput).Return(testCase.expectedAlbum, testCase.expectedError)
 
-	assert.True(t, modelMock.AssertExpectations(t))
+			actualAlbum, actualError := respository.Create(
+				testCase.artist,
+				testCase.price,
+				testCase.title,
+			)
+
+			assert.True(t, modelMock.AssertExpectations(t))
+			assert.Equal(t, actualAlbum, testCase.expectedAlbum)
+			assert.Equal(t, actualError, testCase.expectedError)
+		})
+	}
 }
 
 func TestGetAll(t *testing.T) {
@@ -49,23 +88,20 @@ func TestGetAll(t *testing.T) {
 		},
 	}
 	testCases := []struct {
-		expectedError      error
-		expectedResponse   []entity.Album
-		message            string
-		mockMethodResponse []entity.Album
-		name               string
+		expectedError  error
+		expectedAlbums []entity.Album
+		message        string
+		name           string
 	}{
 		{
-			expectedError:      nil,
-			expectedResponse:   expectedFoundAlbums,
-			mockMethodResponse: expectedFoundAlbums,
-			name:               "Get All Albums Without Error",
+			expectedError:  nil,
+			expectedAlbums: expectedFoundAlbums,
+			name:           "Get All Albums Without Error",
 		},
 		{
-			expectedError:      repository.GetAllError,
-			expectedResponse:   []entity.Album{},
-			mockMethodResponse: []entity.Album{},
-			name:               "Get All Albums With Error",
+			expectedError:  repository.GetAllError,
+			expectedAlbums: []entity.Album{},
+			name:           "Get All Albums With Error",
 		},
 	}
 
@@ -74,12 +110,12 @@ func TestGetAll(t *testing.T) {
 			modelMock := new(ModelMock)
 			respository := repository.NewAlbum(modelMock)
 
-			modelMock.On("Find").Return(testCase.mockMethodResponse, testCase.expectedError)
+			modelMock.On("Find").Return(testCase.expectedAlbums, testCase.expectedError)
 
 			actualAlbums, actualError := respository.GetAll()
 
 			assert.True(t, modelMock.AssertExpectations(t))
-			assert.ElementsMatch(t, actualAlbums, testCase.expectedResponse)
+			assert.ElementsMatch(t, actualAlbums, testCase.expectedAlbums)
 			assert.Equal(t, actualError, testCase.expectedError)
 		})
 	}

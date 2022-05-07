@@ -37,9 +37,11 @@ func (repository *album) Create(artist string, price float64, title string) (ent
 
 	if err != nil {
 		log.Print(err)
+
+		return entity.Album{}, CreateError
 	}
 
-	return createdAlbum, CreateError
+	return createdAlbum, nil
 }
 
 func (respository *album) GetAll() ([]entity.Album, error) {
