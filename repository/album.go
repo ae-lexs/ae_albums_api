@@ -1,39 +1,40 @@
 package repository
 
 import (
+	"errors"
+	"log"
+
 	"github.com/ae-lexs/ae_albums_api/entity"
-	"gorm.io/gorm"
+	"github.com/ae-lexs/ae_albums_api/model"
 )
 
+var CreateError = errors.New("Album Repository Create Error")
+
 type Album interface {
-	Create(entity.Album) (entity.Album, error)
-	GetAll() ([]entity.Album, error)
+	Create(artist string, price float64, title string) (entity.Album, error)
+	// GetAll() ([]entity.Album, error)
 }
 
-type AlbumPostgres struct {
-	Client *gorm.DB
+type album struct {
+	model model.Album
 }
 
-func (repository *AlbumPostgres) Create(album entity.Album) (entity.Album, error) {
-	if err := repository.Client.Create(&album).Error; err != nil {
-		return album, err
+func NewAlbum(model model.Album) album {
+	return album{
+		model: model,
 	}
-
-	return album, nil
 }
 
-func (repository *AlbumPostgres) GetAll() ([]entity.Album, error) {
-	var albums []entity.Album
+func (repository *album) Create(artist string, price float64, title string) (entity.Album, error) {
+	createdAlbum, err := repository.model.Create(entity.Album{
+		Artist: artist,
+		Price:  price,
+		Title:  title,
+	})
 
-	if err := repository.Client.Find(&albums).Error; err != nil {
-		return nil, err
+	if err != nil {
+		log.Print(err)
 	}
 
-	result := repository.Client.Find(&albums)
-
-	if err := result.Error; err != nil {
-		return albums, err
-	}
-
-	return albums, nil
+	return createdAlbum, CreateError
 }

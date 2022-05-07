@@ -1,19 +1,13 @@
 package model
 
 import (
+	"github.com/ae-lexs/ae_albums_api/entity"
 	"gorm.io/gorm"
 )
 
-type AlbumEntity struct {
-	gorm.Model
-	Artist string  `json:"artist"`
-	Price  float64 `json:"price,string"`
-	Title  string  `json:"title"`
-}
-
 type Album interface {
-	Create(AlbumEntity) (AlbumEntity, error)
-	Find() ([]AlbumEntity, error)
+	Create(entity.Album) (entity.Album, error)
+	Find() ([]entity.Album, error)
 }
 
 type albumPostgres struct {
@@ -26,7 +20,7 @@ func NewAlbumPostgres(client *gorm.DB) albumPostgres {
 	}
 }
 
-func (model *albumPostgres) Create(album AlbumEntity) (AlbumEntity, error) {
+func (model *albumPostgres) Create(album entity.Album) (entity.Album, error) {
 	if err := model.client.Create(&album).Error; err != nil {
 		return album, err
 	}
@@ -34,8 +28,8 @@ func (model *albumPostgres) Create(album AlbumEntity) (AlbumEntity, error) {
 	return album, nil
 }
 
-func (model *albumPostgres) Find() ([]AlbumEntity, error) {
-	var albums []AlbumEntity
+func (model *albumPostgres) Find() ([]entity.Album, error) {
+	var albums []entity.Album
 
 	if err := model.client.Find(&albums).Error; err != nil {
 		return nil, err
