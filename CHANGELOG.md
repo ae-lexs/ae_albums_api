@@ -1,3 +1,10 @@
+# [4.1.0](https://github.com/ae-lexs/ae_albums_api/compare/v4.0.0...v4.1.0) (2022-05-07)
+
+
+### Features
+
+* Decode request body in the albumREST.Create method. ([6d0512e](https://github.com/ae-lexs/ae_albums_api/commit/6d0512e4a8bd72d15ecb67a203e546e9f5713ee6))
+
 # [4.0.0](https://github.com/ae-lexs/ae_albums_api/compare/v3.0.0...v4.0.0) (2022-05-07)
 
 
