@@ -25,58 +25,72 @@ func (mock *albumRepositoryMock) GetAll() ([]entity.Album, error) {
 	return args.Get(0).([]entity.Album), args.Error(1)
 }
 
-func TestCreateAlbumOK(t *testing.T) {
-	albumRepository := new(albumRepositoryMock)
+func TestCreateAlbum(t *testing.T) {
 	expectedAlbum := entity.Album{
 		Artist: "ANY_ARTIST",
 		Price:  100.00,
 		Title:  "ANY_TITLE",
 	}
-	expectedResponse := entity.Response{
-		StatusCode: 201,
-		Message:    "Created",
-		Data:       expectedAlbum,
+
+	testCases := []struct {
+		expectedResponse   entity.Response
+		input              entity.CreateAlbumRequest
+		message            string
+		mockMethodInput    entity.Album
+		mockMethodResponse entity.Album
+		mockMethodError    error
+		name               string
+	}{
+		{
+			expectedResponse: entity.Response{
+				StatusCode: 201,
+				Message:    "Created",
+				Data:       expectedAlbum,
+			},
+			input: entity.CreateAlbumRequest{
+				Artist: expectedAlbum.Artist,
+				Price:  expectedAlbum.Price,
+				Title:  expectedAlbum.Title,
+			},
+			message:            "should return the OK Response",
+			mockMethodInput:    expectedAlbum,
+			mockMethodResponse: expectedAlbum,
+			mockMethodError:    nil,
+			name:               "OK Response",
+		},
+		{
+			expectedResponse: entity.Response{
+				StatusCode: 500,
+				Message:    "Internal Server Error",
+				Data:       nil,
+			},
+			input: entity.CreateAlbumRequest{
+				Artist: expectedAlbum.Artist,
+				Price:  expectedAlbum.Price,
+				Title:  expectedAlbum.Title,
+			},
+			message:            "should return the Internal Server Error Response",
+			mockMethodInput:    expectedAlbum,
+			mockMethodResponse: expectedAlbum,
+			mockMethodError:    errors.New("Create Error"),
+			name:               "Internal Server Error Response",
+		},
 	}
-	albumHandler := AlbumREST{
-		Repository: albumRepository,
+
+	for _, testCase := range testCases {
+		t.Run(testCase.name, func(t *testing.T) {
+			albumRepository := new(albumRepositoryMock)
+			albumHandler := AlbumREST{
+				Repository: albumRepository,
+			}
+
+			albumRepository.On("Create", testCase.mockMethodInput).Return(testCase.mockMethodResponse, testCase.mockMethodError)
+
+			actualResponse := albumHandler.CreateAlbum(testCase.input)
+
+			assert.Equal(t, actualResponse, testCase.expectedResponse, testCase.message)
+		})
 	}
-
-	albumRepository.On("Create", expectedAlbum).Return(expectedAlbum, nil)
-
-	actualResponse := albumHandler.CreateAlbum(entity.CreateAlbumRequest{
-		Artist: expectedAlbum.Artist,
-		Price:  expectedAlbum.Price,
-		Title:  expectedAlbum.Title,
-	})
-
-	assert.Equal(t, actualResponse, expectedResponse, "should return the success response")
-}
-
-func TestCreateAlbumInternalServerError(t *testing.T) {
-	albumRepository := new(albumRepositoryMock)
-	expectedAlbum := entity.Album{
-		Artist: "ANY_ARTIST",
-		Price:  100.00,
-		Title:  "ANY_TITLE",
-	}
-	expectedResponse := entity.Response{
-		StatusCode: 500,
-		Message:    "Internal Server Error",
-		Data:       nil,
-	}
-	albumHandler := AlbumREST{
-		Repository: albumRepository,
-	}
-
-	albumRepository.On("Create", expectedAlbum).Return(nil, errors.New("Create Error"))
-
-	actualResponse := albumHandler.CreateAlbum(entity.CreateAlbumRequest{
-		Artist: expectedAlbum.Artist,
-		Price:  expectedAlbum.Price,
-		Title:  expectedAlbum.Title,
-	})
-
-	assert.Equal(t, actualResponse, expectedResponse, "should return the error response")
 }
 
 func TestGetAlbumsOK(t *testing.T) {
