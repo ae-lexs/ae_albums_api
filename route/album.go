@@ -1,6 +1,8 @@
 package route
 
 import (
+	"io/ioutil"
+	"log"
 	"net/http"
 
 	"github.com/ae-lexs/ae_albums_api/entity"
@@ -18,16 +20,20 @@ func NewAlbum(handler handler.Album) album {
 	}
 }
 
-func (route *album) Create(c *gin.Context) {
-	var receivedAlbum entity.CreateAlbumRequest
+func (route *album) Create(context *gin.Context) {
+	requestBody, err := ioutil.ReadAll(context.Request.Body)
 
-	if err := c.BindJSON(&receivedAlbum); err != nil {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{})
+	if err != nil {
+		log.Printf("albumRoute Create, Error with Request Body: %v", err)
+		context.IndentedJSON(http.StatusInternalServerError, entity.Response{
+			StatusCode: http.StatusInternalServerError,
+			Data:       nil,
+		})
 	}
 
-	response := route.handler.Create(receivedAlbum)
+	response := route.handler.Create(requestBody)
 
-	c.IndentedJSON(response.StatusCode, response)
+	context.IndentedJSON(response.StatusCode, response)
 }
 
 func (route *album) Get(c *gin.Context) {

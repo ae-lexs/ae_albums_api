@@ -26,7 +26,7 @@ func (mock *albumRepositoryMock) GetAll() ([]entity.Album, error) {
 	return args.Get(0).([]entity.Album), args.Error(1)
 }
 
-func TestCreate(t *testing.T) {
+func TestAlbumHandlerCreate(t *testing.T) {
 	expectedAlbum := entity.Album{
 		Artist: "ANY_ARTIST",
 		Price:  100.00,
@@ -34,11 +34,14 @@ func TestCreate(t *testing.T) {
 	}
 	testCases := []struct {
 		expectedResponse entity.Response
-		receivedAlbum    entity.CreateAlbumRequest
 		message          string
-		mockResponse     entity.Album
 		mockError        error
+		mockInputArtist  string
+		mockInputPrice   float64
+		mockInputTitle   string
+		mockResponse     entity.Album
 		name             string
+		requestData      []byte
 	}{
 		{
 			expectedResponse: entity.Response{
@@ -46,15 +49,37 @@ func TestCreate(t *testing.T) {
 				Message:    "Created",
 				Data:       expectedAlbum,
 			},
-			receivedAlbum: entity.CreateAlbumRequest{
-				Artist: expectedAlbum.Artist,
-				Price:  expectedAlbum.Price,
-				Title:  expectedAlbum.Title,
+			message:         "should return the OK Response",
+			mockError:       nil,
+			mockInputArtist: expectedAlbum.Artist,
+			mockInputPrice:  expectedAlbum.Price,
+			mockInputTitle:  expectedAlbum.Title,
+			mockResponse:    expectedAlbum,
+			name:            "OK Response",
+			requestData: []byte(`{
+				"artist": "ANY_ARTIST",
+				"price":  "100.00",
+				"title":  "ANY_TITLE"
+			}`),
+		},
+		{
+			expectedResponse: entity.Response{
+				StatusCode: 400,
+				Message:    "Bad Request",
+				Data:       nil,
 			},
-			message:      "should return the OK Response",
-			mockResponse: expectedAlbum,
-			mockError:    nil,
-			name:         "OK Response",
+			message:         "should return the Bad Request Response",
+			mockError:       nil,
+			mockInputArtist: "",
+			mockInputPrice:  0,
+			mockInputTitle:  "",
+			mockResponse:    entity.Album{},
+			name:            "Bad Request Response",
+			requestData: []byte(`{
+				"artist": "ANY_ARTIST",
+				"price":  "100.00",
+				"title":  "ANY_TITLE",
+			}`),
 		},
 		{
 			expectedResponse: entity.Response{
@@ -62,15 +87,18 @@ func TestCreate(t *testing.T) {
 				Message:    "Internal Server Error",
 				Data:       nil,
 			},
-			receivedAlbum: entity.CreateAlbumRequest{
-				Artist: expectedAlbum.Artist,
-				Price:  expectedAlbum.Price,
-				Title:  expectedAlbum.Title,
-			},
-			message:      "should return the Internal Server Error Response",
-			mockResponse: expectedAlbum,
-			mockError:    errors.New("Repository Create Error"),
-			name:         "Internal Server Error Response",
+			message:         "should return the Internal Server Error Response",
+			mockError:       errors.New("Repository Create Error"),
+			mockInputArtist: expectedAlbum.Artist,
+			mockInputPrice:  expectedAlbum.Price,
+			mockInputTitle:  expectedAlbum.Title,
+			mockResponse:    expectedAlbum,
+			name:            "Internal Server Error Response",
+			requestData: []byte(`{
+				"artist": "ANY_ARTIST",
+				"price":  "100.00",
+				"title":  "ANY_TITLE"
+			}`),
 		},
 	}
 
@@ -81,15 +109,15 @@ func TestCreate(t *testing.T) {
 
 			albumRepository.On(
 				"Create",
-				testCase.receivedAlbum.Artist,
-				testCase.receivedAlbum.Price,
-				testCase.receivedAlbum.Title,
+				testCase.mockInputArtist,
+				testCase.mockInputPrice,
+				testCase.mockInputTitle,
 			).Return(
 				testCase.mockResponse,
 				testCase.mockError,
 			)
 
-			actualResponse := albumHandler.Create(testCase.receivedAlbum)
+			actualResponse := albumHandler.Create(testCase.requestData)
 
 			assert.Equal(t, actualResponse, testCase.expectedResponse, testCase.message)
 		})

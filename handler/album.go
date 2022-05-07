@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/ae-lexs/ae_albums_api/entity"
@@ -8,13 +10,14 @@ import (
 )
 
 const (
+	badRequestMessage          = "Bad Request"
 	createdMessage             = "Created"
 	internalServerErrorMessage = "Internal Server Error"
 	okMessage                  = "OK"
 )
 
 type Album interface {
-	Create(entity.CreateAlbumRequest) entity.Response
+	Create([]byte) entity.Response
 	Get() entity.Response
 }
 
@@ -28,11 +31,23 @@ func NewAlbumREST(repository repository.Album) albumREST {
 	}
 }
 
-func (handler *albumREST) Create(receivedAlbum entity.CreateAlbumRequest) entity.Response {
+func (handler *albumREST) Create(requestBody []byte) entity.Response {
+	var albumData entity.CreateAlbumRequest
+
+	if err := json.Unmarshal(requestBody, &albumData); err != nil {
+		log.Printf("albumREST Create, Error Parsing JSON: %v", err)
+
+		return entity.Response{
+			StatusCode: http.StatusBadRequest,
+			Message:    badRequestMessage,
+			Data:       nil,
+		}
+	}
+
 	createdAlbum, err := handler.repository.Create(
-		receivedAlbum.Artist,
-		receivedAlbum.Price,
-		receivedAlbum.Title,
+		albumData.Artist,
+		albumData.Price,
+		albumData.Title,
 	)
 
 	if err != nil {
