@@ -1,6 +1,7 @@
 package repository_test
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/ae-lexs/ae_albums_api/entity"
@@ -25,7 +26,13 @@ func (mock *ModelMock) Find() ([]entity.Album, error) {
 	return args.Get(0).([]entity.Album), args.Error(1)
 }
 
-func TestCreate(t *testing.T) {
+func (mock *ModelMock) FindByID(id string) (entity.Album, error) {
+	args := mock.Called(id)
+
+	return args.Get(0).(entity.Album), args.Error(1)
+}
+
+func TestAlbumRepositoryCreate(t *testing.T) {
 	expectedAlbum := entity.Album{
 		Artist: "ANY_ARTIST",
 		Price:  100.0,
@@ -52,7 +59,7 @@ func TestCreate(t *testing.T) {
 		{
 			expectedAlbum: entity.Album{},
 			artist:        expectedAlbum.Artist,
-			expectedError: repository.CreateError,
+			expectedError: errors.New("Album Repository Create Error"),
 			price:         expectedAlbum.Price,
 			title:         expectedAlbum.Title,
 			mockInput:     expectedAlbum,
@@ -79,7 +86,7 @@ func TestCreate(t *testing.T) {
 	}
 }
 
-func TestGetAll(t *testing.T) {
+func TestAlbumRepositoryGetAll(t *testing.T) {
 	expectedFoundAlbums := []entity.Album{
 		{
 			Artist: "ANY_ARTIST",
@@ -99,7 +106,7 @@ func TestGetAll(t *testing.T) {
 			name:           "Get All Albums Without Error",
 		},
 		{
-			expectedError:  repository.GetAllError,
+			expectedError:  errors.New("Album Repository GetAll Error"),
 			expectedAlbums: []entity.Album{},
 			name:           "Get All Albums With Error",
 		},
@@ -116,6 +123,49 @@ func TestGetAll(t *testing.T) {
 
 			assert.True(t, modelMock.AssertExpectations(t))
 			assert.ElementsMatch(t, actualAlbums, testCase.expectedAlbums)
+			assert.Equal(t, actualError, testCase.expectedError)
+		})
+	}
+}
+
+func TestAlbumRepositoryGetByID(t *testing.T) {
+	expectedFoundAlbum := entity.Album{
+		Artist: "ANY_ARTIST",
+		Price:  100.0,
+		Title:  "ANY_TITLE",
+	}
+	testCases := []struct {
+		albumID       string
+		expectedError error
+		expectedAlbum entity.Album
+		message       string
+		name          string
+	}{
+		{
+			albumID:       "ANY_ALBUM_ID",
+			expectedError: nil,
+			expectedAlbum: expectedFoundAlbum,
+			name:          "Get By ID Without Error",
+		},
+		{
+			albumID:       "ANY_ALBUM_ID",
+			expectedError: errors.New("Album Repository GetByIDError Error"),
+			expectedAlbum: entity.Album{},
+			name:          "Get By ID Albums With Error",
+		},
+	}
+
+	for _, testCase := range testCases {
+		t.Run(testCase.name, func(t *testing.T) {
+			modelMock := new(ModelMock)
+			respository := repository.NewAlbum(modelMock)
+
+			modelMock.On("FindByID", testCase.albumID).Return(testCase.expectedAlbum, testCase.expectedError)
+
+			actualAlbum, actualError := respository.GetByID(testCase.albumID)
+
+			assert.True(t, modelMock.AssertExpectations(t))
+			assert.Equal(t, actualAlbum, testCase.expectedAlbum)
 			assert.Equal(t, actualError, testCase.expectedError)
 		})
 	}

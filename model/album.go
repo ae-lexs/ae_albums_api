@@ -6,8 +6,9 @@ import (
 )
 
 type Album interface {
-	Create(entity.Album) (entity.Album, error)
+	Create(album entity.Album) (entity.Album, error)
 	Find() ([]entity.Album, error)
+	FindByID(id string) (entity.Album, error)
 }
 
 type albumPostgres struct {
@@ -29,17 +30,21 @@ func (model *albumPostgres) Create(album entity.Album) (entity.Album, error) {
 }
 
 func (model *albumPostgres) Find() ([]entity.Album, error) {
-	var albums []entity.Album
+	var foundAlbums []entity.Album
 
-	if err := model.client.Find(&albums).Error; err != nil {
-		return nil, err
+	if err := model.client.Find(&foundAlbums).Error; err != nil {
+		return foundAlbums, err
 	}
 
-	result := model.client.Find(&albums)
+	return foundAlbums, nil
+}
 
-	if err := result.Error; err != nil {
-		return albums, err
+func (model *albumPostgres) FindByID(id string) (entity.Album, error) {
+	var foundAlbum entity.Album
+
+	if err := model.client.First(&foundAlbum, id).Error; err != nil {
+		return foundAlbum, err
 	}
 
-	return albums, nil
+	return foundAlbum, nil
 }
