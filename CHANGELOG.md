@@ -1,3 +1,11 @@
+# [4.2.0](https://github.com/ae-lexs/ae_albums_api/compare/v4.1.0...v4.2.0) (2022-05-21)
+
+
+### Features
+
+* Add GetByID method to album repository. ([a41f0e2](https://github.com/ae-lexs/ae_albums_api/commit/a41f0e2102d3d055e12a113adc01ab329aafd8f4))
+* Add NotFound response to the Get method of Album handler. ([6b58511](https://github.com/ae-lexs/ae_albums_api/commit/6b5851124059c07e806c68cd8954eab5c75a7d5d))
+
 # [4.1.0](https://github.com/ae-lexs/ae_albums_api/compare/v4.0.0...v4.1.0) (2022-05-07)
 
 
