@@ -18,6 +18,7 @@ func GetGinRouter(postgresClient *gorm.DB) *gin.Engine {
 	album := router.Group("/album")
 
 	album.GET("/", albumRoutes.Get)
+	album.GET("/:id", albumRoutes.Get)
 	album.POST("/", albumRoutes.Create)
 
 	return router

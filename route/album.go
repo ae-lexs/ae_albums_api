@@ -41,16 +41,3 @@ func (route *album) Get(context *gin.Context) {
 
 	context.IndentedJSON(response.StatusCode, response)
 }
-
-// func getAlbumById(c *gin.Context) {
-// 	receivedId := c.Param("id")
-
-// 	for _, album := range albums {
-// 		if album.ID == receivedId {
-// 			c.IndentedJSON(http.StatusOK, album)
-
-// 			return
-// 		}
-// 	}
-// 	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "Album Not Found"})
-// }
