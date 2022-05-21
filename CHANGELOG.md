@@ -1,3 +1,10 @@
+# [4.3.0](https://github.com/ae-lexs/ae_albums_api/compare/v4.2.0...v4.3.0) (2022-05-21)
+
+
+### Features
+
+* Return AlbumNotFoundError in GetByID method of Album repository. ([e43b4a8](https://github.com/ae-lexs/ae_albums_api/commit/e43b4a8787f94016d46364176faacd3b166f7246))
+
 # [4.2.0](https://github.com/ae-lexs/ae_albums_api/compare/v4.1.0...v4.2.0) (2022-05-21)
 
 
