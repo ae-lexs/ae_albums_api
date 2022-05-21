@@ -1,3 +1,10 @@
+# [4.4.0](https://github.com/ae-lexs/ae_albums_api/compare/v4.3.0...v4.4.0) (2022-05-21)
+
+
+### Features
+
+* Add route to GET an album by ID. ([a68e939](https://github.com/ae-lexs/ae_albums_api/commit/a68e939881c30ba072fcf1dc4e1ab76c097972df))
+
 # [4.3.0](https://github.com/ae-lexs/ae_albums_api/compare/v4.2.0...v4.3.0) (2022-05-21)
 
 
