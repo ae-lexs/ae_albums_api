@@ -59,7 +59,7 @@ func TestAlbumRepositoryCreate(t *testing.T) {
 		{
 			expectedAlbum: entity.Album{},
 			artist:        expectedAlbum.Artist,
-			expectedError: errors.New("Album Repository Create Error"),
+			expectedError: errors.New("AlbumModelError"),
 			price:         expectedAlbum.Price,
 			title:         expectedAlbum.Title,
 			mockInput:     expectedAlbum,
@@ -106,7 +106,7 @@ func TestAlbumRepositoryGetAll(t *testing.T) {
 			name:           "Get All Albums Without Error",
 		},
 		{
-			expectedError:  errors.New("Album Repository GetAll Error"),
+			expectedError:  errors.New("AlbumModelError"),
 			expectedAlbums: []entity.Album{},
 			name:           "Get All Albums With Error",
 		},
@@ -149,7 +149,7 @@ func TestAlbumRepositoryGetByID(t *testing.T) {
 		},
 		{
 			albumID:       "ANY_ALBUM_ID",
-			expectedError: errors.New("Album Repository GetByIDError Error"),
+			expectedError: errors.New("AlbumModelError"),
 			expectedAlbum: entity.Album{},
 			name:          "Get By ID Albums With Error",
 		},

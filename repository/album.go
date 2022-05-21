@@ -9,15 +9,14 @@ import (
 )
 
 var (
-	CreateError  = errors.New("Album Repository Create Error")
-	GetAllError  = errors.New("Album Repository GetAll Error")
-	GetByIDError = errors.New("Album Repository GetByIDError Error")
+	AlbumModelError    = errors.New("AlbumModelError")
+	AlbumNotFoundError = errors.New("AlbumNotFoundError")
 )
 
 type Album interface {
 	Create(artist string, price float64, title string) (entity.Album, error)
 	GetAll() ([]entity.Album, error)
-	GetByID(id string) ([]entity.Album, error)
+	GetByID(id string) (entity.Album, error)
 }
 
 type album struct {
@@ -40,7 +39,7 @@ func (repository *album) Create(artist string, price float64, title string) (ent
 	if err != nil {
 		log.Printf("Album Repository Create, DB Client Error: %v", err)
 
-		return entity.Album{}, CreateError
+		return entity.Album{}, AlbumModelError
 	}
 
 	return createdAlbum, nil
@@ -52,7 +51,7 @@ func (respository *album) GetAll() ([]entity.Album, error) {
 	if err != nil {
 		log.Printf("Album Repository Get, DB Client Error: %v", err)
 
-		return foundAlbums, GetAllError
+		return foundAlbums, AlbumModelError
 	}
 
 	return foundAlbums, nil
@@ -64,7 +63,7 @@ func (respository *album) GetByID(id string) (entity.Album, error) {
 	if err != nil {
 		log.Printf("Album Repository GetByID, DB Client Error: %v", err)
 
-		return foundAlbum, GetByIDError
+		return foundAlbum, AlbumModelError
 	}
 
 	return foundAlbum, nil

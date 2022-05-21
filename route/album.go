@@ -36,10 +36,10 @@ func (route *album) Create(context *gin.Context) {
 	context.IndentedJSON(response.StatusCode, response)
 }
 
-func (route *album) Get(c *gin.Context) {
-	response := route.handler.Get()
+func (route *album) Get(context *gin.Context) {
+	response := route.handler.Get(context.Param("id"))
 
-	c.IndentedJSON(response.StatusCode, response)
+	context.IndentedJSON(response.StatusCode, response)
 }
 
 // func getAlbumById(c *gin.Context) {

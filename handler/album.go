@@ -13,12 +13,13 @@ const (
 	badRequestMessage          = "Bad Request"
 	createdMessage             = "Created"
 	internalServerErrorMessage = "Internal Server Error"
+	notFoundMessage            = "Not Found"
 	okMessage                  = "OK"
 )
 
 type Album interface {
-	Create([]byte) entity.Response
-	Get() entity.Response
+	Create(requestBody []byte) entity.Response
+	Get(albumID string) entity.Response
 }
 
 type albumREST struct {
@@ -65,7 +66,15 @@ func (handler *albumREST) Create(requestBody []byte) entity.Response {
 	}
 }
 
-func (handler *albumREST) Get() entity.Response {
+func (handler *albumREST) Get(albumID string) entity.Response {
+	if albumID != "" {
+		return handler.getByID(albumID)
+	}
+
+	return handler.getAll()
+}
+
+func (handler *albumREST) getAll() entity.Response {
 	foundAlbums, err := handler.repository.GetAll()
 
 	if err != nil {
@@ -80,5 +89,31 @@ func (handler *albumREST) Get() entity.Response {
 		StatusCode: http.StatusOK,
 		Message:    okMessage,
 		Data:       foundAlbums,
+	}
+}
+
+func (handler *albumREST) getByID(albumID string) entity.Response {
+	foundAlbum, err := handler.repository.GetByID(albumID)
+
+	if err == nil {
+		return entity.Response{
+			StatusCode: http.StatusOK,
+			Message:    okMessage,
+			Data:       foundAlbum,
+		}
+	}
+
+	if err.Error() == repository.AlbumNotFoundError.Error() {
+		return entity.Response{
+			StatusCode: http.StatusNotFound,
+			Message:    notFoundMessage,
+			Data:       nil,
+		}
+	}
+
+	return entity.Response{
+		StatusCode: http.StatusInternalServerError,
+		Message:    internalServerErrorMessage,
+		Data:       nil,
 	}
 }

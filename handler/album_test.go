@@ -26,6 +26,12 @@ func (mock *albumRepositoryMock) GetAll() ([]entity.Album, error) {
 	return args.Get(0).([]entity.Album), args.Error(1)
 }
 
+func (mock *albumRepositoryMock) GetByID(albumID string) (entity.Album, error) {
+	args := mock.Called(albumID)
+
+	return args.Get(0).(entity.Album), args.Error(1)
+}
+
 func TestAlbumHandlerCreate(t *testing.T) {
 	expectedAlbum := entity.Album{
 		Artist: "ANY_ARTIST",
@@ -34,7 +40,6 @@ func TestAlbumHandlerCreate(t *testing.T) {
 	}
 	testCases := []struct {
 		expectedResponse entity.Response
-		message          string
 		mockError        error
 		mockInputArtist  string
 		mockInputPrice   float64
@@ -49,7 +54,6 @@ func TestAlbumHandlerCreate(t *testing.T) {
 				Message:    "Created",
 				Data:       expectedAlbum,
 			},
-			message:         "should return the OK Response",
 			mockError:       nil,
 			mockInputArtist: expectedAlbum.Artist,
 			mockInputPrice:  expectedAlbum.Price,
@@ -68,7 +72,6 @@ func TestAlbumHandlerCreate(t *testing.T) {
 				Message:    "Bad Request",
 				Data:       nil,
 			},
-			message:         "should return the Bad Request Response",
 			mockError:       nil,
 			mockInputArtist: "",
 			mockInputPrice:  0,
@@ -87,7 +90,6 @@ func TestAlbumHandlerCreate(t *testing.T) {
 				Message:    "Internal Server Error",
 				Data:       nil,
 			},
-			message:         "should return the Internal Server Error Response",
 			mockError:       errors.New("Repository Create Error"),
 			mockInputArtist: expectedAlbum.Artist,
 			mockInputPrice:  expectedAlbum.Price,
@@ -119,47 +121,70 @@ func TestAlbumHandlerCreate(t *testing.T) {
 
 			actualResponse := albumHandler.Create(testCase.requestData)
 
-			assert.Equal(t, actualResponse, testCase.expectedResponse, testCase.message)
+			assert.Equal(t, actualResponse, testCase.expectedResponse)
 		})
 	}
 }
 
-func TestGet(t *testing.T) {
-	expectedAlbums := []entity.Album{
-		{
-			Artist: "ANY_ARTIST",
-			Price:  100.00,
-			Title:  "ANY_TITLE",
-		},
+func TestAlbumHandlerGet(t *testing.T) {
+	expectedAlbum := entity.Album{
+		Artist: "ANY_ARTIST",
+		Price:  100.00,
+		Title:  "ANY_TITLE",
 	}
+	expectedAlbums := []entity.Album{expectedAlbum}
 	testCases := []struct {
+		albumID          string
 		expectedResponse entity.Response
-		message          string
-		mockResponse     []entity.Album
-		mockError        error
+		mockAllResponse  []entity.Album
+		mockOneResponse  entity.Album
+		mockAllError     error
+		mockOneError     error
 		name             string
 	}{
 		{
+			albumID: "",
 			expectedResponse: entity.Response{
 				StatusCode: 200,
 				Message:    "OK",
 				Data:       expectedAlbums,
 			},
-			message:      "should return the OK Response",
-			mockResponse: expectedAlbums,
-			mockError:    nil,
-			name:         "OK Response",
+			mockAllResponse: expectedAlbums,
+			mockAllError:    nil,
+			name:            "OK Response Get All",
 		},
 		{
+			albumID: "",
 			expectedResponse: entity.Response{
 				StatusCode: 500,
 				Message:    "Internal Server Error",
 				Data:       nil,
 			},
-			message:      "should return the Internal Server Error Response",
-			mockResponse: []entity.Album{},
-			mockError:    errors.New("Get Error"),
-			name:         "Internal Server Error Response",
+			mockAllResponse: []entity.Album{},
+			mockAllError:    errors.New("GetError"),
+			name:            "Internal Server Error Response Get All",
+		},
+		{
+			albumID: "1",
+			expectedResponse: entity.Response{
+				StatusCode: 200,
+				Message:    "OK",
+				Data:       expectedAlbum,
+			},
+			mockOneResponse: expectedAlbum,
+			mockOneError:    nil,
+			name:            "OK Response Get Specific",
+		},
+		{
+			albumID: "1",
+			expectedResponse: entity.Response{
+				StatusCode: 404,
+				Message:    "Not Found",
+				Data:       nil,
+			},
+			mockOneResponse: entity.Album{},
+			mockOneError:    errors.New("AlbumNotFoundError"),
+			name:            "Not Found Response Get Specific",
 		},
 	}
 
@@ -168,11 +193,15 @@ func TestGet(t *testing.T) {
 			albumRepository := new(albumRepositoryMock)
 			albumHandler := handler.NewAlbumREST(albumRepository)
 
-			albumRepository.On("GetAll").Return(testCase.mockResponse, testCase.mockError)
+			albumRepository.On("GetAll").Return(testCase.mockAllResponse, testCase.mockAllError)
+			albumRepository.On("GetByID", testCase.albumID).Return(
+				testCase.mockOneResponse,
+				testCase.mockOneError,
+			)
 
-			actualResponse := albumHandler.Get()
+			actualResponse := albumHandler.Get(testCase.albumID)
 
-			assert.Equal(t, actualResponse, testCase.expectedResponse, testCase.message)
+			assert.Equal(t, actualResponse, testCase.expectedResponse)
 		})
 	}
 }
