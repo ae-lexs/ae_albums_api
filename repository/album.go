@@ -66,5 +66,9 @@ func (respository *album) GetByID(id string) (entity.Album, error) {
 		return foundAlbum, AlbumModelError
 	}
 
+	if foundAlbum == (entity.Album{}) {
+		return foundAlbum, AlbumNotFoundError
+	}
+
 	return foundAlbum, nil
 }

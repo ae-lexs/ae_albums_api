@@ -54,7 +54,7 @@ func TestAlbumRepositoryCreate(t *testing.T) {
 			price:         expectedAlbum.Price,
 			title:         expectedAlbum.Title,
 			mockInput:     expectedAlbum,
-			name:          "Create Album Without Error",
+			name:          "Create Album Without AlbumModelError",
 		},
 		{
 			expectedAlbum: entity.Album{},
@@ -63,7 +63,7 @@ func TestAlbumRepositoryCreate(t *testing.T) {
 			price:         expectedAlbum.Price,
 			title:         expectedAlbum.Title,
 			mockInput:     expectedAlbum,
-			name:          "Create Album With Error",
+			name:          "Create Album With AlbumModelError",
 		},
 	}
 
@@ -103,12 +103,12 @@ func TestAlbumRepositoryGetAll(t *testing.T) {
 		{
 			expectedError:  nil,
 			expectedAlbums: expectedFoundAlbums,
-			name:           "Get All Albums Without Error",
+			name:           "Get All Albums Without AlbumModelError",
 		},
 		{
 			expectedError:  errors.New("AlbumModelError"),
 			expectedAlbums: []entity.Album{},
-			name:           "Get All Albums With Error",
+			name:           "Get All Albums With AlbumModelError",
 		},
 	}
 
@@ -136,22 +136,32 @@ func TestAlbumRepositoryGetByID(t *testing.T) {
 	}
 	testCases := []struct {
 		albumID       string
-		expectedError error
 		expectedAlbum entity.Album
+		expectedError error
+		mockError     error
 		message       string
 		name          string
 	}{
 		{
 			albumID:       "ANY_ALBUM_ID",
-			expectedError: nil,
 			expectedAlbum: expectedFoundAlbum,
-			name:          "Get By ID Without Error",
+			expectedError: nil,
+			mockError:     nil,
+			name:          "Get By ID Without AlbumModelError",
 		},
 		{
 			albumID:       "ANY_ALBUM_ID",
-			expectedError: errors.New("AlbumModelError"),
 			expectedAlbum: entity.Album{},
-			name:          "Get By ID Albums With Error",
+			expectedError: errors.New("AlbumModelError"),
+			name:          "Get By ID Albums With AlbumModelError",
+			mockError:     errors.New("ANY_ERROR"),
+		},
+		{
+			albumID:       "ANY_ALBUM_ID",
+			expectedAlbum: entity.Album{},
+			expectedError: errors.New("AlbumNotFoundError"),
+			mockError:     nil,
+			name:          "Get By ID Albums With AlbumNotFoundError",
 		},
 	}
 
@@ -160,7 +170,7 @@ func TestAlbumRepositoryGetByID(t *testing.T) {
 			modelMock := new(ModelMock)
 			respository := repository.NewAlbum(modelMock)
 
-			modelMock.On("FindByID", testCase.albumID).Return(testCase.expectedAlbum, testCase.expectedError)
+			modelMock.On("FindByID", testCase.albumID).Return(testCase.expectedAlbum, testCase.mockError)
 
 			actualAlbum, actualError := respository.GetByID(testCase.albumID)
 
