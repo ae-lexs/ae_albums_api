@@ -1,3 +1,10 @@
+# [4.5.0](https://github.com/ae-lexs/ae_albums_api/compare/v4.4.0...v4.5.0) (2022-06-01)
+
+
+### Features
+
+* Dockerize the project. ([1691b62](https://github.com/ae-lexs/ae_albums_api/commit/1691b62221cd4d9a7cc480da24b3b632f8f6159c))
+
 # [4.4.0](https://github.com/ae-lexs/ae_albums_api/compare/v4.3.0...v4.4.0) (2022-05-21)
 
 
