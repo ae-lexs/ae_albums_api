@@ -1,13 +1,29 @@
 services:
+  ae_albums_api:
+    build: .
+    restart: always
+    ports:
+      - 8080:8080
+    environment:
+      DB_HOST: 'postgres'
+      DB_NAME: 'album_db'
+      DB_PASSWORD: 'album2022'
+      DB_PORT: 5432
+      DB_USER: 'album_user'
+      ENVIRONMENT: 'DEVELOPMENT'
+      SERVER_PORT: 8080
+    depends_on:
+      - postgres
+
   postgres:
     image: postgres:10.3
     restart: always
     ports:
-      - 5433:5432
+      - 5436:5432
     environment:
-      POSTGRES_USER: album_user
-      POSTGRES_PASSWORD: album2022
-      POSTGRES_DB: album_db
+      POSTGRES_USER: 'album_user'
+      POSTGRES_PASSWORD: 'album2022'
+      POSTGRES_DB: 'album_db'
     volumes:
       - postgres:/var/lib/postgresql/data
 
